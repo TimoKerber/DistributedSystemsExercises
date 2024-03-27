@@ -21,10 +21,10 @@ client.on('connect', () => {
   responseRl.on('line', (data) => {
     console.log(data + '\n');
   });
-  get('test', client);
 });
 
-const get = function(key, client) {
+// gets the value of key or null if key has no value in database
+const get = function(key) {
   const getRequest = {
     action: 'get',
     key: key,
@@ -32,3 +32,21 @@ const get = function(key, client) {
 
   client.write(JSON.stringify(getRequest) + '\n');
 };
+
+// sets  or overwrites a key value pair in the database
+const set = function(key, value) {
+  const setRequest = {
+    action: 'set',
+    key: key,
+    value: value,
+  };
+
+  client.write(JSON.stringify(setRequest) + '\n');
+};
+
+
+// For testing purposes
+get('test');
+get('test1');
+set('test1', 'received and set');
+get('test1');

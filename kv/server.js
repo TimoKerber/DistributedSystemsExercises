@@ -3,13 +3,15 @@ const readline = require('readline');
 
 const server = net.createServer();
 
+// map for storing key value pairs
+const kvMap = new Map();
+kvMap['test'] = 'exists';
+
 // log errors
 server.on('error', (err) => {
   console.error(err);
 });
 
-const kvMap = new Map();
-kvMap['test'] = 'exists';
 
 // code executed on new client connection
 server.on('connection', (client) => {
@@ -19,13 +21,16 @@ server.on('connection', (client) => {
 
   rl.on('line', (data) => {
     const request = JSON.parse(data);
-    let value = 'null';
-    if (request.action = 'get') {
+
+    if (request.action == 'get') {
+      let value = 'null';
       if (kvMap[request.key] != undefined) {
         value = kvMap[request.key];
       }
 
       client.write(value + '\n');
+    } else {
+      kvMap[request.key] = request.value;
     }
   });
 });
